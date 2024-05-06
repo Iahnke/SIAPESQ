@@ -1,22 +1,10 @@
-# app/__init__.py
-
 from flask import Flask
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-from flask_jwt import JWT
-from config import Config
 
-db = SQLAlchemy()
-bcrypt = Bcrypt()
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:secret@localhost/flask_login'
+app.config['SECRET_KEY'] = 'secret'
 
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object(Config)
-
-    db.init_app(app)
-    bcrypt.init_app(app)
-
-    from app.routes import bp as api_bp
-    app.register_blueprint(api_bp, url_prefix='/api')
-
-    return app
+login_manager = LoginManager(app)
+db = SQLAlchemy(app)
